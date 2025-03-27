@@ -7,6 +7,8 @@
 // @match        *://*/*
 // @icon         https://img.icons8.com/?size=100&id=n9d0Hm43JCPK&format=png&color=000000
 // @grant        GM_setClipboard
+// @updateURL    https://github.com/thedebuggedlife/tampermonkey-scripts/raw/refs/heads/main/anchor-links.user.js
+// @downloadURL  https://github.com/thedebuggedlife/tampermonkey-scripts/raw/refs/heads/main/anchor-links.user.js
 // ==/UserScript==
 
 (function () {

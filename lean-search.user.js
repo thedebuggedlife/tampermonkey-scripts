@@ -8,6 +8,8 @@
 // @icon         https://img.icons8.com/color/48/search--v1.png
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
+// @updateURL    https://github.com/thedebuggedlife/tampermonkey-scripts/raw/refs/heads/main/lean-search.user.js
+// @downloadURL  https://github.com/thedebuggedlife/tampermonkey-scripts/raw/refs/heads/main/lean-search.user.js
 // ==/UserScript==
 
 (function() {

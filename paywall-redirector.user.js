@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Paywall Redirector (RemovePaywalls)
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Redirects specific news sites to removepaywalls.com with custom options
 // @author       Antonio Vargas Garcia
 // @icon         https://img.icons8.com/?size=100&id=64946&format=png&color=000000
@@ -9,6 +9,7 @@
 // @match        *://*.seattletimes.com/*
 // @match        *://*.newrepublic.com/*
 // @match        *://*.404media.co/*
+// @match        *://*.nytimes.com/*
 // @run-at       document-start
 // @grant        none
 // @updateURL    https://github.com/thedebuggedlife/tampermonkey-scripts/raw/refs/heads/main/paywall-redirector.user.js
@@ -35,6 +36,7 @@
  *
  * - The 'domain-part' is a unique part of the URL (e.g., 'nytimes.com').
  * - The 'OPTION' is the specific prefix you want (leave empty for default, or add /2/, /4/, etc).
+ * - If a site is NOT listed in siteConfig, it will use the DEFAULT_PREFIX defined below.
  *
  * Example:
  * 'nytimes.com': 'https://removepaywalls.com/',
@@ -46,32 +48,34 @@
     'use strict';
 
     // CONFIGURATION SECTION
+    const DEFAULT_PREFIX = 'https://removepaywalls.com/';
+
     const siteConfig = {
         // 'domain-snippet': 'prefix-url'
+        // Sites not listed here will use DEFAULT_PREFIX
         'reuters.com':      'https://removepaywalls.com/4/',
-        'seattletimes.com': 'https://removepaywalls.com/',
-        'newrepublic.com':  'https://removepaywalls.com/',
         '404media.co':      'https://removepaywalls.com/3/',
     };
 
     const currentUrl = window.location.href;
 
-    // Iterate through our config to find a match
-    for (const [domainSnippet, prefix] of Object.entries(siteConfig)) {
+    // Find a site-specific prefix, or fall back to the default
+    let prefix = DEFAULT_PREFIX;
+    for (const [domainSnippet, sitePrefix] of Object.entries(siteConfig)) {
         if (currentUrl.includes(domainSnippet)) {
-
-            // Construct the new URL
-            // Result: prefix + original_full_url
-            const newUrl = prefix + currentUrl;
-
-            // Log for debugging (viewable in browser console F12)
-            console.log(`[Paywall Redirector] Redirecting to: ${newUrl}`);
-
-            // Perform the redirect immediately
-            // We use .replace() so the paywalled page doesn't get stuck in your 'Back' history
-            window.location.replace(newUrl);
-
-            break; // Stop checking after the first match
+            prefix = sitePrefix;
+            break;
         }
     }
+
+    // Construct the new URL
+    // Result: prefix + original_full_url
+    const newUrl = prefix + currentUrl;
+
+    // Log for debugging (viewable in browser console F12)
+    console.log(`[Paywall Redirector] Redirecting to: ${newUrl}`);
+
+    // Perform the redirect immediately
+    // We use .replace() so the paywalled page doesn't get stuck in your 'Back' history
+    window.location.replace(newUrl);
 })();

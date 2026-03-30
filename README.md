@@ -9,7 +9,9 @@ This repository contains a set of custom [Tampermonkey](https://www.tampermonkey
 Here’s a growing list of scripts included in this repo:
 
 1. [**Lean Search**](./lean-search.user.js) – Remove sponsored entries from Google search results.
-2. [**Anchor Link**](./lean-search.user.js) – Show anchor links on hover for h1-h6 elements with id/name attributes, and copy to clipboard when clicked.
+2. [**Anchor Links**](./anchor-links.user.js) – Show anchor links on hover for h1-h6 elements with id/name attributes, and copy to clipboard when clicked.
+3. [**Paywall Redirector**](./paywall-redirector.user.js) – Redirect paywalled news sites through RemovePaywalls.com for free access.
+4. [**Social Switch**](./social-switch.user.js) – Redirect social media sites to privacy-friendly alternative frontends (Instagram → Imginn, X → xCancel, Reddit → Redlib, YouTube → Piped, etc.).
 
 ## How to Install
 

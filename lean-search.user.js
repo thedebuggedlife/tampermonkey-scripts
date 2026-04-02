@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Lean Search
 // @namespace    https://gist.github.com/
-// @version      1.1
+// @version      1.2
 // @description  Remove sponsored entries from Google search results
 // @author       Antonio Vargas Garcia
 // @match        https://www.google.com/search*
@@ -20,7 +20,7 @@
         var search = $("#search").first();
         // Find all HTML elements with sponsored content that shows outside the main result section
         var sponsored = $(":contains('Sponsored')").filter(function() {
-            return this.innerHTML.trim() === "Sponsored" && search.has($(this)).length == 0;
+            return /^Sponsored(\s+result)?$/.test(this.innerHTML.trim()) && search.has($(this)).length == 0;
         });
         // For each sponsored element, find the closest parent node in common with the results and hide the tree with ads
         sponsored.each(function() {
@@ -30,6 +30,7 @@
             ancestor.hide();
         });
         // Also hide ads that show inline with the search results
+        $("#tads, #tadsb").hide();
         $("h1:contains('Ads')").each(function() {
             if (this.innerHTML.trim() == 'Ads') {
                 $(this).parent().hide();

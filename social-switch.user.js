@@ -9,10 +9,7 @@
 // @match        *://*.tiktok.com/*
 // @match        *://*.x.com/*
 // @match        *://*.twitter.com/*
-// @match        *://*.reddit.com/*
-// @match        *://*.youtube.com/*
 // @match        *://*.medium.com/*
-// @match        *://*.imgur.com/*
 // @run-at       document-start
 // @grant        none
 // @updateURL    https://github.com/thedebuggedlife/tampermonkey-scripts/raw/refs/heads/main/social-switch.user.js

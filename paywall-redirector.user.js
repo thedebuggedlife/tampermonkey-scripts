@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Paywall Redirector (RemovePaywalls)
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Redirects specific news sites to removepaywalls.com with custom options
 // @author       Antonio Vargas Garcia
 // @icon         https://img.icons8.com/?size=100&id=64946&format=png&color=000000
@@ -54,7 +54,7 @@
         // 'domain-snippet': 'prefix-url'
         // Sites not listed here will use DEFAULT_PREFIX
         'reuters.com':      'https://removepaywalls.com/4/',
-        '404media.co':      'https://removepaywalls.com/3/',
+        '404media.co':      'https://removepaywalls.com/2/',
     };
 
     const currentUrl = window.location.href;

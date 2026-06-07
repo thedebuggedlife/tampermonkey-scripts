@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Social Switch (Privacy Frontends)
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Redirects social media sites to privacy-friendly alternative frontends
 // @author       Antonio Vargas Garcia
 // @icon         https://img.icons8.com/external-smashingstocks-outline-color-smashing-stocks/66/external-social-network-networking-smashingstocks-outline-color-smashing-stocks.png

@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Paywall Redirector (RemovePaywalls)
+// @name         Paywall Redirector (Ladder)
 // @namespace    http://tampermonkey.net/
-// @version      1.3
-// @description  Redirects specific news sites to removepaywalls.com with custom options
+// @version      2.0
+// @description  Redirects paywalled news sites through a self-hosted ladder proxy, or straight to archive.today for hard-paywall sites
 // @author       Antonio Vargas Garcia
 // @icon         https://img.icons8.com/?size=100&id=64946&format=png&color=000000
 // @match        *://*.reuters.com/*
@@ -21,25 +21,37 @@
  * README
  * ======================================================================================
  *
+ * WHERE A PAGE GETS SENT
+ *
+ * There are exactly two destinations, and a site belongs to one of two lists:
+ *
+ *   1. ladder (the default)  -> https://ladder.vargas.casa/<encoded url>
+ *      A self-hosted proxy that fetches the article server-side with per-domain rules.
+ *      This is where every matched site goes unless it is listed in 'archiveSites'.
+ *
+ *   2. archive.today          -> https://archive.ph/newest/<raw url>
+ *      For hard-paywall sites ladder cannot crack live. archive.ph is fetched by YOUR
+ *      browser, so its CAPTCHA sees a residential IP and passes; a server IP does not.
+ *
  * HOW TO ADD A NEW SITE:
  *
- * You must perform TWO steps for this script to work on a new website.
+ * STEP 1 (always): add a match rule to the metadata block at the top of this file, e.g.
+ *   // @match        *://*.example.com/*
+ *   Without it the script never runs on that site.
  *
- * STEP 1: Add a Match Rule
- * Go to the top of this script (the metadata block) and add a new line starting with // @match
- * Example:
- * // @match        *://*.nytimes.com/*
+ * STEP 2 (only for hard-paywall sites): add a domain snippet to the 'archiveSites' array
+ * below, e.g. 'example.com'. Anything NOT in that array goes through ladder, which is the
+ * preferred path — it renders the live article rather than an archived snapshot.
  *
- * STEP 2: Update the Configuration
- * Scroll down to the 'siteConfig' object below and add a new line.
- * The format is: 'domain-part': 'https://removepaywalls.com/OPTION/'
+ * If a site starts failing through ladder, moving it into 'archiveSites' is the fix.
  *
- * - The 'domain-part' is a unique part of the URL (e.g., 'nytimes.com').
- * - The 'OPTION' is the specific prefix you want (leave empty for default, or add /2/, /4/, etc).
- * - If a site is NOT listed in siteConfig, it will use the DEFAULT_PREFIX defined below.
+ * NOTE ON THE ENCODING: the ladder URL is built with encodeURIComponent() and that is
+ * mandatory, not cosmetic. The reverse proxy in front of ladder collapses a literal '//'
+ * in the path, which makes ladder return a 500. archive.ph, by contrast, wants the URL raw.
  *
- * Example:
- * 'nytimes.com': 'https://removepaywalls.com/',
+ * NOTE ON SIGNING IN: ladder.vargas.casa sits behind Authelia. With a live session the
+ * redirect is invisible; without one you land on the login page and continue to the article
+ * after authenticating. That is by design — do not try to work around it.
  *
  * ======================================================================================
  */
@@ -48,29 +60,24 @@
     'use strict';
 
     // CONFIGURATION SECTION
-    const DEFAULT_PREFIX = 'https://removepaywalls.com/';
+    const LADDER_PREFIX  = 'https://ladder.vargas.casa/';
+    const ARCHIVE_PREFIX = 'https://archive.ph/newest/';
 
-    const siteConfig = {
-        // 'domain-snippet': 'prefix-url'
-        // Sites not listed here will use DEFAULT_PREFIX
-        'reuters.com':      'https://removepaywalls.com/4/',
-        '404media.co':      'https://removepaywalls.com/2/',
-    };
+    // Hard-paywall sites ladder cannot crack live — send the browser straight to
+    // archive.today (a residential IP passes its CAPTCHA; a server IP does not).
+    const archiveSites = ['nytimes.com'];
 
     const currentUrl = window.location.href;
 
-    // Find a site-specific prefix, or fall back to the default
-    let prefix = DEFAULT_PREFIX;
-    for (const [domainSnippet, sitePrefix] of Object.entries(siteConfig)) {
-        if (currentUrl.includes(domainSnippet)) {
-            prefix = sitePrefix;
-            break;
-        }
+    // Never redirect a destination onto itself.
+    if (currentUrl.startsWith(LADDER_PREFIX) || currentUrl.includes('archive.ph/')) {
+        return;
     }
 
-    // Construct the new URL
-    // Result: prefix + original_full_url
-    const newUrl = prefix + currentUrl;
+    const useArchive = archiveSites.some(d => currentUrl.includes(d));
+    const newUrl = useArchive
+        ? ARCHIVE_PREFIX + currentUrl                       // archive.ph wants it raw
+        : LADDER_PREFIX + encodeURIComponent(currentUrl);   // ladder needs it ENCODED
 
     // Log for debugging (viewable in browser console F12)
     console.log(`[Paywall Redirector] Redirecting to: ${newUrl}`);

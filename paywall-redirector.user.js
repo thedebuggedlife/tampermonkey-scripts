@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name         Paywall Redirector (Ladder)
 // @namespace    http://tampermonkey.net/
-// @version      2.1
+// @version      2.2
 // @description  Redirects paywalled news sites through a self-hosted ladder proxy, or straight to archive.today for hard-paywall sites
 // @author       Antonio Vargas Garcia
 // @icon         https://img.icons8.com/?size=100&id=64946&format=png&color=000000
-// @match        *://*.reuters.com/*
 // @match        *://*.seattletimes.com/*
 // @match        *://*.newrepublic.com/*
 // @match        *://*.404media.co/*

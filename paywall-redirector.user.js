@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Paywall Redirector (Ladder)
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.1
 // @description  Redirects paywalled news sites through a self-hosted ladder proxy, or straight to archive.today for hard-paywall sites
 // @author       Antonio Vargas Garcia
 // @icon         https://img.icons8.com/?size=100&id=64946&format=png&color=000000
@@ -45,6 +45,12 @@
  *
  * If a site starts failing through ladder, moving it into 'archiveSites' is the fix.
  *
+ * HOW TO TELL WHICH FAILURE YOU HAVE: a bot-detection block (DataDome, PerimeterX) renders
+ * a full "unusual activity" page in your browser and cites YOUR IP, not the server's — its
+ * interstitial script is an absolute URL, so ladder passes it through and it runs client
+ * side. That site belongs in 'archiveSites'. A page that arrives readable but visibly
+ * unstyled is a different bug entirely — that one is ladder's URL rewriting, so fix ladder.
+ *
  * NOTE ON THE ENCODING: the ladder URL is built with encodeURIComponent() and that is
  * mandatory, not cosmetic. The reverse proxy in front of ladder collapses a literal '//'
  * in the path, which makes ladder return a 500. archive.ph, by contrast, wants the URL raw.
@@ -63,9 +69,13 @@
     const LADDER_PREFIX  = 'https://ladder.vargas.casa/';
     const ARCHIVE_PREFIX = 'https://archive.ph/newest/';
 
-    // Hard-paywall sites ladder cannot crack live — send the browser straight to
-    // archive.today (a residential IP passes its CAPTCHA; a server IP does not).
-    const archiveSites = ['nytimes.com'];
+    // Sites ladder cannot fetch live — send the browser straight to archive.today
+    // (a residential IP passes its CAPTCHA; a server IP does not).
+    //
+    // reuters.com is here for bot detection, not a paywall: it sits behind DataDome
+    // ('x-datadome: protected', 401 to any server-side fetch regardless of user agent).
+    // FlareSolverr does not help — it only mints Cloudflare cookies.
+    const archiveSites = ['nytimes.com', 'reuters.com'];
 
     const currentUrl = window.location.href;
 

@@ -1,14 +1,13 @@
 // ==UserScript==
 // @name         Paywall Redirector (Ladder)
 // @namespace    http://tampermonkey.net/
-// @version      2.2
+// @version      2.3
 // @description  Redirects paywalled news sites through a self-hosted ladder proxy, or straight to archive.today for hard-paywall sites
 // @author       Antonio Vargas Garcia
 // @icon         https://img.icons8.com/?size=100&id=64946&format=png&color=000000
 // @match        *://*.seattletimes.com/*
 // @match        *://*.newrepublic.com/*
 // @match        *://*.404media.co/*
-// @match        *://*.nytimes.com/*
 // @run-at       document-start
 // @grant        none
 // @updateURL    https://github.com/thedebuggedlife/tampermonkey-scripts/raw/refs/heads/main/paywall-redirector.user.js
@@ -74,7 +73,10 @@
     // reuters.com is here for bot detection, not a paywall: it sits behind DataDome
     // ('x-datadome: protected', 401 to any server-side fetch regardless of user agent).
     // FlareSolverr does not help — it only mints Cloudflare cookies.
-    const archiveSites = ['nytimes.com', 'reuters.com'];
+    //
+    // nytimes.com is deliberately absent (no @match either): it is handled client-side
+    // by the BPC filter list + a private window, so this script must not touch it.
+    const archiveSites = ['reuters.com'];
 
     const currentUrl = window.location.href;
 

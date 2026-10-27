@@ -10,7 +10,7 @@ Here’s a growing list of scripts included in this repo:
 
 1. [**Lean Search**](./lean-search.user.js) – Remove sponsored entries from Google search results.
 2. [**Anchor Links**](./anchor-links.user.js) – Show anchor links on hover for h1-h6 elements with id/name attributes, and copy to clipboard when clicked.
-3. [**Paywall Redirector**](./paywall-redirector.user.js) – Redirect paywalled news sites through a self-hosted [ladder](https://github.com/everywall/ladder) proxy, or straight to archive.today for hard-paywall sites.
+3. [**Paywall Redirector**](./paywall-redirector.user.js) – **Retired.** It redirected paywalled news sites through a self-hosted [ladder](https://github.com/everywall/ladder) proxy; v3.0 does nothing, so uninstall it.
 4. [**Social Switch**](./social-switch.user.js) – Redirect social media sites to privacy-friendly alternative frontends (Instagram → Imginn, X → xCancel, Reddit → Redlib, YouTube → Piped, etc.).
 
 ## How to Install
